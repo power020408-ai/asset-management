@@ -1,4 +1,4 @@
-Web API開発で主流となっているSpring Bootの中に Spring Batchという機能があるのに興味を持ち、どのように実際の業務処理に適用できるのか知りたくなり、投資信託のバックオフィス業務で行われる基準価額計算を題材として今回の開発を試みました。またJavaの解説書のなかであまり取り上げらることのないデータ型 BigDecimal についても、経験値をあげたく試作のなかで取り組みました。
+Web API開発で主流となっているSpring Bootの中に Spring Batchという機能があるのに興味を持ち、どのように実際の業務処理に適用できるのか知りたくなり、投資信託のバックオフィス業務で行われる基準価額計算を題材として今回の開発を試みました。またJavaの解説書のなかではあまり取り上げられることのないデータ型 BigDecimal についても、経験値をあげたく試作のなかで取り組みました。
 <br/>
 
 # 1. 実務要件
@@ -9,12 +9,13 @@ Web API開発で主流となっているSpring Bootの中に Spring Batchとい�
 (d) またファンド管理用Webから、CSVデータの取り込み、基準価額計算の起動が可能なこと<br/>
 (e) 基準価額はスケジュール起動も可能とすること<br/>
 <br/>
+
 # 2. アーキテクチャ構成<br/>
 Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張性の高い設計になっています。<br/>
 <br/>
 <img width="242" height="226" alt="image" src="https://github.com/user-attachments/assets/1b6a13c7-03bb-4c5e-9004-07240488e07a" />
 <br/>
-<br/>
+
 # 3. 使用技術<br/>
 <img width="501" height="226" alt="image" src="https://github.com/user-attachments/assets/eaa0fb26-a73e-4bd1-9b89-cb8ef2df4ba4" />
 <br/>
@@ -27,7 +28,7 @@ Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張�
 
 (b) FundNavHistory（基準価額履歴）<br/>
 
-- 基準価額, NAV, 口数を日次で保存
+- 基準価額、NAV、口数を日次で保存
 - NAV 計算時に自動で UPSERT
 - Fund と紐付け
 
@@ -58,6 +59,7 @@ Spring Batch により以下の処理を実装しています。<br/>
 (c) FundNavHistory に保存（UPSERT）<br/>
 (d) Fund（ファンド）のNAV、口数、基準価額を最新に更新<br/>
 (e) ログ出力で計算過程を記録<br/>
+またデータ型 BigDecimal を用いることにより丸め誤差による精度落ちに対処しつつ、端数切捨て・ゼロ判定にも適切に対応しています。
 <br/>
 
 # 7. 画面一覧<br/>
