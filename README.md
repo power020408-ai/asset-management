@@ -1,3 +1,4 @@
+
 Web API開発で主流となっているSpring Bootの中に Spring Batchという機能があるのに興味を持ち、どのように実際の業務処理に適用できるのか知りたくなり、投資信託のバックオフィス業務で行われる基準価格計算を題材として今回の開発を試みました。またJavaの解説書のなかであまり取り上げらることのないデータ型 BigDecimal についても、経験値をあげたく試作のなかで取り組みました。
 <br/>
 <br/>
@@ -62,8 +63,9 @@ Spring Batch により以下の処理を実装しています。<br/>
 (e) ログ出力で計算過程を記録<br/>
 <br/>
 #7. Web AP 一覧<br/>
-<img width="485" height="126" alt="image" src="https://github.com/user-attachments/assets/120a09a7-86ec-4f88-98fe-1ac0d2618236" />
-<br/>
+
+<img width="932" height="126" alt="image" src="https://github.com/user-attachments/assets/3d6df9ee-c5d0-432f-b301-8d641bd7ad9c" />
+
 <br/>
 #8. 実行方法
 
