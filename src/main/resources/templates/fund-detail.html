@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fund Detail</title>
+    <style>
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h1, h2 { text-align: center; }
+    </style>
+</head>
+<body>
+<a href="/funds">ファンド リスト</a>
+<h1>ファンド詳細</h1>
+
+<table>
+    <tr><th>ID</th><td th:text="${fund.fundId}"></td></tr>
+    <tr><th>ファンド名</th><td th:text="${fund.name}"></td></tr>
+    <tr><th>基準日</th><td th:text="${fund.navDate}"></td></tr>
+    <tr><th>基準価格</th><td th:text="${#numbers.formatInteger(fund.unitPrice,1,'COMMA')}"></td></tr>
+    <tr><th>NAV</th><td th:text="${#numbers.formatInteger(fund.nav,1,'COMMA')}"></td></tr>
+    <tr><th>口数</th><td th:text="${fund.getFundSharesStr()}"></td></tr>
+
+</table>
+<br>
+<h2>基準価格 推移</h2>
+<table>
+    <tr>
+        <th>基準日</th>
+        <th>基準価格</th>
+        <th>NAV</th>
+    </tr>
+
+    <tr th:each="h : ${history}">
+        <td th:text="${h.navDate}"></td>
+        <td th:text="${#numbers.formatInteger(h.unitPrice,1,'COMMA')}"></td>
+        <td th:text="${#numbers.formatInteger(h.nav,1,'COMMA')}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

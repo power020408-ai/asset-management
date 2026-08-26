@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fund管理</title>
+</head>
+<body>
+
+<h1>Fund管理</h1>
+
+<form th:action="@{/assets/upload}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv">
+    <button type="submit">Upload CSV</button>
+</form>
+<!-- メッセージが存在する場合のみ緑色で表示 -->
+<div th:if="${messageCSV}" th:text="${messageCSV}" style="color: green; font-weight: bold;">
+    メッセージがここに入ります
+</div>
+
+<br>
+<br>
+
+<form th:action="@{/nav/start}" method="post">
+    <button type="submit">NAV算出開始</button>
+</form>
+
+<div th:if="${messageNAV}" th:text="${messageNAV}" style="color: green; font-weight: bold;">
+    メッセージがここに入ります
+</div>
+
+
+</body>
+</html>

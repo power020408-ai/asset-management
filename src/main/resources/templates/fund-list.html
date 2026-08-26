@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fund List</title>
+    <style>
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h1 { text-align: center; }
+    </style>
+</head>
+
+<body>
+<h1>ファンド リスト</h1>
+<!-- 一覧表示 -->
+<table>
+    <tr>
+        <th class="th-width">ID</th>
+        <th class="th-width">ファンド名</th>
+        <th class="th-width">基準日</th>
+        <th class="th-width">基準価格</th>
+        <th class="th-width">NAV</th>
+        <th class="th-width">詳細</th>
+    </tr>
+    <tr th:each="fund: ${funds}">
+        <td th:text="${fund.fundId}"></td>
+        <td th:text="${fund.name}"></td>
+        <td th:text="${fund.navDate}"></td>
+        <td th:text="${#numbers.formatInteger(fund.unitPrice,1,'COMMA')}"></td>
+        <td th:text="${#numbers.formatInteger(fund.nav,1,'COMMA')}"></td>
+        <td>
+            <a class="btn btn-primary" th:href="@{'/funds/' + ${fund.fundId}}">
+                開く
+            </a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
