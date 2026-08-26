@@ -78,16 +78,18 @@ Spring Batch により以下の処理を実装しています。<br/>
 (b) Spring Boot を起動
    
             ./mvnw spring-boot:run
-   
-#9. セキュリティ注意点
+<br/>
+<br/>
+#9. セキュリティ注意点<br/>
 以下の通り application.properties に DB パスワードを直接書かないようにしています。
 
             spring.datasource.username=${DB_USER}
             spring.datasource.password=${DB_PASS}
+<br/>
+<br/>        
+#10. 今後の拡張予定<br/>
+今後、追加したい機能です。<br/>
 
-            
-#10. 今後の拡張予定
-今後、追加したい機能です。
 - 資産分類（株式・債券・現金など）のため、銘柄テーブルを追加
 - チャート表示（Chart.js）
 - ファンドの複数クラス対応
