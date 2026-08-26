@@ -10,24 +10,26 @@ Web API開発で主流となっているSpring Bootの中に Spring Batchとい�
 (e) 基準価格計算はスケジュール起動も可能とすること
 <br/>
 <br/>
-#2. アーキテクチャ構成  
-Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張性の高い設計になっています。　<br/>
-        <img width="501" height="226" alt="image" src="https://github.com/user-attachments/assets/eaa0fb26-a73e-4bd1-9b89-cb8ef2df4ba4" />
+#2. アーキテクチャ構成<br/>
+Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張性の高い設計になっています。
+　　
+   <img width="242" height="226" alt="image" src="https://github.com/user-attachments/assets/1b6a13c7-03bb-4c5e-9004-07240488e07a" />
+<br/>
+<br/>
+#3. 使用技術<br/>
+   
+  <img width="501" height="226" alt="image" src="https://github.com/user-attachments/assets/eaa0fb26-a73e-4bd1-9b89-cb8ef2df4ba4" />
+<br/>
+<br/>
+#4. エンティティ構造<br/> 
+(a) Fund（ファンド）   
 
-
-#3. 使用技術
-
-　
-      
-
-
-#4. エンティティ構造    
-(a) Fund（ファンド）
 - ファンドの基本情報
 - NAV、口数、基準価額の最新を保存
 - Asset 及び FundNavHistory と(1:N)で紐付け
 
-(b) FundNavHistory（基準価額履歴）
+(b) FundNavHistory（基準価額履歴） 
+
 - 基準価額, NAV, 口数を日次で保存
 - NAV 計算時に自動で UPSERT
 - Fund と紐付け
@@ -51,7 +53,6 @@ CSV をアップロードすることにより、Asset(資産)データを取り
    - JPA Repository によりAsset（資産）を検索
    - 存在すればAsset（資産）を更新、なければ新規作成
 <br/>
-<br/>
 #6. 基準価額計算<br/>
 Spring Batch により以下の処理を実装しています。<br/>
 (a) 指定ファンドの資産をすべて取得<br/>
@@ -59,40 +60,35 @@ Spring Batch により以下の処理を実装しています。<br/>
 (c) FundNavHistory に保存（UPSERT）<br/>
 (d) Fund（ファンド）のNAV、口数、基準価額を最新に更新<br/>
 (e) ログ出力で計算過程を記録<br/>
-
-
-#7. Web AP 一覧
-
-               
-
+<br/>
+#7. Web AP 一覧<br/>
+<img width="485" height="126" alt="image" src="https://github.com/user-attachments/assets/120a09a7-86ec-4f88-98fe-1ac0d2618236" />
+<br/>
+<br/>
 #8. 実行方法
 
-(a). PostgreSQL を起動
+(a) PostgreSQL を起動
    
-      -　環境変数で DB ユーザー名・パスワードを設定：
+-　環境変数で DB ユーザー名・パスワードを設定：
    
             export DB_USER=your_user
    
             export DB_PASS=your_pass
    
-2. Spring Boot を起動
+(b) Spring Boot を起動
    
             ./mvnw spring-boot:run
    
-VIII. セキュリティ注意点
-
-上記の通り application.properties に DB パスワードを直接書かないようにしています。
+#9. セキュリティ注意点
+以下の通り application.properties に DB パスワードを直接書かないようにしています。
 
             spring.datasource.username=${DB_USER}
             spring.datasource.password=${DB_PASS}
 
             
-IX. 今後の拡張予定
-
+#10. 今後の拡張予定
+今後、追加したい機能です。
 - 資産分類（株式・債券・現金など）のため、銘柄テーブルを追加
-
 - チャート表示（Chart.js）
-
 - ファンドの複数クラス対応
-
 - JSON形式のデータ開示用 Web APIの追加
