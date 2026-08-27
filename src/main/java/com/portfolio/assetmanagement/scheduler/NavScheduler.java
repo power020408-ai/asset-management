@@ -21,7 +21,7 @@ public class NavScheduler {
     }
 
     // 毎日 01:00 に NAV を計算 - 秒：0, 分：0, 時：20, 日：*(毎日), 月：*(毎月), 曜日：*(毎日)
-    @Scheduled(cron = "* * 20 * * *")
+    @Scheduled(cron = "0 0 20 * * *")
     public void startNavJob() {
         try {
             JobParameters params = new JobParametersBuilder()
