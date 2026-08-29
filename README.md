@@ -122,7 +122,8 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 
 ### 画面 [ファンド管理]
 <br/>
-<img width="1354" height="477" alt="image" src="https://github.com/user-attachments/assets/bedcd635-e29c-4d12-b8b5-8711dc7ebc4d" />
+<img width="1203" height="511" alt="image" src="https://github.com/user-attachments/assets/28e0103e-65ae-46b7-982a-b65a29c07d06" />
+
 
 
 
