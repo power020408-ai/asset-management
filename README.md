@@ -17,7 +17,18 @@ Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張�
 <br/>
 
 # 3. 使用技術<br/>
-<img width="501" height="226" alt="image" src="https://github.com/user-attachments/assets/eaa0fb26-a73e-4bd1-9b89-cb8ef2df4ba4" />
+|カテゴリー|技術|
+|-------------|---------------------------|
+|Backend|Spring Boot 4.1.0|
+|ORM|Spring Data JPA / JDBC|
+|Batch|Spring Batch|
+|DB|PostgreSQL|
+|Build|Maven|
+|Language|Java 17|
+|Logging|SLF4J / Logback|
+|Others|CSV Import, Composite Key, Thymeleaf|
+
+
 <br/>
 
 # 4. エンティティ構造<br/>
