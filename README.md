@@ -1,4 +1,4 @@
-Web API開発で主流となっているSpring Bootの中に Spring Batchという機能があるのに興味を持ち、どのように実際の業務処理に適用できるのか知りたくなり、投資信託のバックオフィス業務で行われる基準価額計算を題材として今回の開発を試みました。またJavaの解説書のなかではあまり取り上げられることのないデータ型 BigDecimal についても、経験値をあげたく試作のなかで取り組みました。
+Web API開発で主流となっているSpring Bootの中に Spring Batchという機能があるのに興味を持ち、どのように実際の業務処理に適用できるのか知りたくなり、投資信託のバックオフィス業務で行われる基準価額計算を題材として今回の開発を試みました。またJavaの解説書のなかではあまり取り上げられることのないデータ型 BigDecimal についても、経験値をあげたく開発のなかで取り組みました。
 <br/>
 
 # 1. 実務要件
@@ -12,8 +12,10 @@ Web API開発で主流となっているSpring Bootの中に Spring Batchとい�
 
 # 2. アーキテクチャ構成<br/>
 Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張性の高い設計になっています。<br/>
+
+
+<img width="242" height="226" alt="image" src="https://github.com/user-attachments/assets/39dd9751-57e3-48c2-a965-8e06d64f1b6d" />
 <br/>
-<img width="242" height="226" alt="image" src="https://github.com/user-attachments/assets/1b6a13c7-03bb-4c5e-9004-07240488e07a" />
 <br/>
 
 # 3. 使用技術<br/>
@@ -56,7 +58,7 @@ CSV をアップロードすることにより、Asset(資産)データを取り
      同じ (fund_id, nav_date, asset_id) が存在する場合  →  UPDATE     
      存在しない場合   →   INSERT
         
-(b) 処理の流れ
+(b) 処理の流れ<br/>
 Spring Batch の Chunk モデルを使用し、以下の処理を実装しています。
    - JobOperator: /assets/upload (POST) により Batch 起動
    - ItemReader: Asset(資産) CSVデータを Javaクラスに取り込み
@@ -77,7 +79,10 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 
 # 7. 画面一覧<br/>
 
-<img width="932" height="126" alt="image" src="https://github.com/user-attachments/assets/3d6df9ee-c5d0-432f-b301-8d641bd7ad9c" />
+
+<img width="947" height="126" alt="image" src="https://github.com/user-attachments/assets/34d4ea52-9baa-41d8-8aec-810975d32c5c" />
+
+
 
 
 # 8. 実行方法
