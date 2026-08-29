@@ -3,7 +3,7 @@ Web API開発で主流となっているSpring Bootの中に Spring Batchとい�
 
 # 1. 実務要件
 今回の開発では、以下の実務要件を満たすように設計しています。<br/>
-(a) 資産データの数量・価格は日々変動し、外部CSVデータとしてインタフェースできること 
+(a) 資産データの数量・価格は日々変動し、外部CSVデータとしてインタフェースできること<br/>
 (b) 同一日でも「約定通知遅延」「価格修正」が発生するため、資産データは日中でも上書き更新（UPSERT）できること<br/>
 (c) 計算されたNAV、基準価額は日次で蓄積され、Webより履歴が参照可能なこと<br/>
 (d) またファンド管理用Webから、CSVデータの取り込み、基準価額計算の起動が可能なこと<br/>
@@ -46,14 +46,16 @@ CSV をアップロードすることにより、Asset(資産)データを取り
      存在しない場合   →   INSERT
         
 (b) 処理の流れ
-   - /assets/upload (POST) によりCSV を読み込む
-   - AssetId（複合キー）を生成
-   - JPA Repository によりAsset（資産）を検索
-   - 存在すればAsset（資産）を更新、なければ新規作成
+Spring Batch の Chunk モデルを使用し、以下の処理を実装しています。
+   - JobOperator: /assets/upload (POST) により Batch 起動
+   - ItemReader: Asset(資産) CSVデータを Javaクラスに取り込み
+   - ItemProcesser: データベース格納用の Javaクラスに変換
+   - ItemWriter: 変換後の JavaクラスをJDBCによりデータベースに格納
+   - JobListener: Batch終了のステータスを画面に転送
 <br/>
 
 # 6. 基準価額計算<br/>
-Spring Batch により以下の処理を実装しています。<br/>
+Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を実装しています。<br/>
 (a) 指定ファンドの資産をすべて取得<br/>
 (b) NAV、口数、基準価額を算出<br/>
 (c) FundNavHistory に保存（UPSERT）<br/>
