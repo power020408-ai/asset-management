@@ -1,5 +1,8 @@
 package com.portfolio.assetmanagement.scheduler;
 
+import com.portfolio.assetmanagement.service.FundService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.job.parameters.JobParameters;
@@ -11,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NavScheduler {
-
+    private static final Logger log = LoggerFactory.getLogger(NavScheduler.class);
     private final JobOperator jobOperator;
     private final Job navJob;
 
@@ -20,7 +23,7 @@ public class NavScheduler {
         this.navJob = navJob;
     }
 
-    // 毎日 01:00 に NAV を計算 - 秒：0, 分：0, 時：20, 日：*(毎日), 月：*(毎月), 曜日：*(毎日)
+    // 毎日 20:00 に NAV を計算 - 秒：0, 分：0, 時：20, 日：*(毎日), 月：*(毎月), 曜日：*(毎日)
     @Scheduled(cron = "0 0 20 * * *")
     public void startNavJob() {
         try {
@@ -31,12 +34,12 @@ public class NavScheduler {
             // ジョブの実行
             JobExecution jobExecution = jobOperator.start(navJob, params);
 
-            System.out.println("Job Status : " + jobExecution.getStatus());
+            log.info("Job Status : " + jobExecution.getStatus());
 
         } catch (Exception e) {
             // エラー時はログに出力する
-            System.err.println("NAV Job failed: " + e.getMessage());
-            e.printStackTrace();
+            log.error("NAV Job failed: " + e.getMessage());
+            //e.printStackTrace();
         }
     }
 }

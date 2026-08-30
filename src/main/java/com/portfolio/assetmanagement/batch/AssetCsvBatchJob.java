@@ -77,7 +77,7 @@ public class AssetCsvBatchJob {
     @Bean
     public Job importUserJob(JobRepository jobRepository, Step step1,
                              JobCompletionNotificationListener listener) {
-        return new JobBuilder(jobRepository)
+        return new JobBuilder("importUserJob", jobRepository)
                 .listener(listener)
                 .start(step1)
                 .build();
@@ -90,7 +90,7 @@ public class AssetCsvBatchJob {
                       AssetItemProcessor processor,
                       JdbcBatchItemWriter<AssetTable> writer) {
 
-        return new StepBuilder(jobRepository)
+        return new StepBuilder("step1", jobRepository)
 			.<AssetCsv, AssetTable>chunk(2)
 			.transactionManager(transactionManager)
 			.reader(reader)

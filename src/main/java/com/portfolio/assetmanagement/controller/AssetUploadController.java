@@ -1,6 +1,5 @@
 package com.portfolio.assetmanagement.controller;
 
-import com.portfolio.assetmanagement.service.AssetCsvService;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.JobExecution;
@@ -19,20 +18,17 @@ import java.io.File;
 
 @Controller
 public class AssetUploadController {
-    //private final AssetCsvService assetCsvService;
     //private final JobLauncher jobLauncher;
     private final JobOperator jobOperator;
     private final Job importUserJob;
 
 
     public AssetUploadController(
-            //AssetCsvService assetCsvService
             //JobLauncher jobLauncher,
             JobOperator jobOperator,
             Job importUserJob
 
             ) {
-        //this.assetCsvService = assetCsvService;
         //this.jobLauncher = jobLauncher;
         this.jobOperator = jobOperator;
         this.importUserJob = importUserJob;
@@ -47,10 +43,7 @@ public class AssetUploadController {
     @PostMapping("/assets/upload")
     public String uploadCsv(
             @RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes
-    )                      //{
-                           // assetCsvService.importCsv(file);
-            throws Exception {
+            RedirectAttributes redirectAttributes) throws Exception {
                 if (file.isEmpty()) {
                     redirectAttributes.addFlashAttribute("messageCSV", "ファイルを選択してください。");
                     return "redirect:/assets/upload";
