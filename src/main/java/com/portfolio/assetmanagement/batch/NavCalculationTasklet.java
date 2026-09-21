@@ -30,8 +30,16 @@ public class NavCalculationTasklet implements Tasklet {
 
         List<Fund> funds = fundRepository.findAll();
 
+        String navDateText =
+                (String) chunkContext
+                        .getStepContext()
+                        .getJobParameters()
+                        .get("navDate");
+
+        LocalDate navDate = LocalDate.parse(navDateText);
+
         for (Fund fund : funds) {
-            fundService.calculateNav(fund.getFundId(),LocalDate.now());
+            fundService.calculateNav(fund.getFundId(), navDate);
             log.info("NAV calculated for Fund: {}", fund.getName());
         }
 

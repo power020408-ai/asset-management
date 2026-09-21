@@ -13,4 +13,5 @@ import java.time.LocalDate;
 public interface AssetRepository extends JpaRepository<Asset, AssetId> {
 
     List<Asset> findByFundAndNavDate(Fund fund, LocalDate navDate);
+    boolean existsByNavDate(LocalDate navDate);
 }
