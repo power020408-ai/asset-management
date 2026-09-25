@@ -120,6 +120,14 @@
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>5.23.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.uuid</groupId>
+			<artifactId>java-uuid-generator</artifactId>
+			<version>5.2.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

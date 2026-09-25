@@ -11,11 +11,14 @@ import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.batch.infrastructure.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.infrastructure.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.infrastructure.item.file.FlatFileItemReader;
 import org.springframework.batch.infrastructure.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.infrastructure.item.support.ClassifierCompositeItemWriter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.classify.Classifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -52,21 +55,57 @@ public class AssetCsvBatchJob {
     }
 
     @Bean
-    public JdbcBatchItemWriter<AssetTable> writer(DataSource dataSource) {
+    public ClassifierCompositeItemWriter<AssetTable> classifierCompositeItemWriter(
+            JdbcBatchItemWriter<AssetTable> assetWriter,
+            JdbcBatchItemWriter<AssetTable> fundSharesWriter) {
+
+        ClassifierCompositeItemWriter<AssetTable> compositeWriter =
+                new ClassifierCompositeItemWriter<>();
+
+        // Item の値を見て、どの ItemWriter を使うかを決定する Classifier をセット
+        compositeWriter.setClassifier((Classifier<AssetTable, ItemWriter<? super AssetTable>>)
+                item -> {
+            if ("FUND_SHARES".equals(item.assetIdStr())) {
+                return fundSharesWriter;
+            } else {
+                return assetWriter;
+            }
+        });
+
+        return compositeWriter;
+    }
+
+    // 1. Asset 用の Writer
+    @Bean
+    public JdbcBatchItemWriter<AssetTable> assetWriter(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<AssetTable>()
                 .sql("""
                         INSERT INTO assets
-                          	(asset_id, amount, asset_name, fund_id , nav_date)
+                          	(asset_id, amount, fund_id , nav_date)
                         VALUES
-                          	(:assetIdStr, :amount, :assetName, :fundId , :navDate)
+                          	(:assetIdStr, :amount, :fundId , :navDate)
                         ON CONFLICT(asset_id, fund_id , nav_date)
                         DO UPDATE SET
                           	asset_id = excluded.asset_id,
                         	fund_id = excluded.fund_id,
                         	nav_date = excluded.nav_date,
-                            asset_name = excluded.asset_name,
+                                asset_name = excluded.asset_name,
                         	amount = excluded.amount;
                         """ )
+                .dataSource(dataSource)
+                .beanMapped()
+                .build();
+    }
+
+    // 2. Fund Shares 用の Writer
+    @Bean
+    public JdbcBatchItemWriter<AssetTable> fundSharesWriter(DataSource dataSource) {
+        return new JdbcBatchItemWriterBuilder<AssetTable>()
+                .sql("""
+                     UPDATE funds
+  			         SET fund_shares = :amount
+                     WHERE fund_id = :fundId;
+                     """ )
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();
@@ -74,6 +113,7 @@ public class AssetCsvBatchJob {
     // end::readerwriterprocessor[]
 
     // tag::jobstep[]
+
     @Bean
     public Job importUserJob(JobRepository jobRepository, Step step1,
                              JobCompletionNotificationListener listener) {
@@ -88,7 +128,7 @@ public class AssetCsvBatchJob {
                       PlatformTransactionManager transactionManager,
                       FlatFileItemReader<AssetCsv> reader,
                       AssetItemProcessor processor,
-                      JdbcBatchItemWriter<AssetTable> writer) {
+                      ClassifierCompositeItemWriter<AssetTable> writer) {
 
         return new StepBuilder("step1", jobRepository)
 			.<AssetCsv, AssetTable>chunk(2)

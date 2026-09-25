@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,10 +28,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class FundServiceTest {
 
-    @Mock
+    //@Mock
     private FundRepository fundRepository;
 
-    @Mock
+    //@Mock
     private AssetRepository assetRepository;
 
     @Mock
@@ -127,5 +128,5 @@ class FundServiceTest {
         verify(history).setNav(ZERO);        // 総資産は0
         verify(history).setFundShares(ZERO); // 口数も0（nullは除外）
         verify(history).setUnitPrice(ZERO);  // 0除算を回避して0のまま
-    }
+       }
 }

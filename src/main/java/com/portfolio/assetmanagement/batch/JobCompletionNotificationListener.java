@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobCompletionNotificationListener implements JobExecutionListener {
 
-    private static final Logger log = LoggerFactory.getLogger(JobCompletionNotificationListener.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(JobCompletionNotificationListener.class);
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,7 +26,12 @@ public class JobCompletionNotificationListener implements JobExecutionListener {
     public void afterJob(JobExecution jobExecution) {
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             log.info("CSV Upload Completed");
-
+            jdbcTemplate.update("""
+                          INSERT INTO asset_master (asset_Id)
+                          SELECT DISTINCT assets.asset_Id
+                          FROM assets
+                          ON CONFLICT (asset_Id) DO NOTHING;
+                          """);
         }
     }
 }

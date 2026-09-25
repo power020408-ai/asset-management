@@ -14,6 +14,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,16 +41,18 @@ public class FundService {
         // ★ 今日の資産だけ取得（複合主キーの fundId + navDate）
         List<Asset> assets = assetRepository.findByFundAndNavDate(fund, navDate);
         BigDecimal nav = assets.stream()
-                .filter(asset -> asset.getAssetId() != null && !"FUND_SHARES".equals(asset.getAssetId()))
+                //.filter(asset -> asset.getAssetId() != null && !"FUND_SHARES".equals(asset.getAssetId()))
                 .map(Asset::getAmount)
                 .filter(Objects::nonNull) // null の金額がある場合の NullPointerException 防止
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal fundShares = assets.stream()
-                .filter(asset -> asset.getAssetId()!= null && "FUND_SHARES".equals(asset.getAssetId()))
-                .map(Asset::getAmount)
-                .filter(Objects::nonNull) // null の金額がある場合の NullPointerException 防止
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal fundShares = fund.getFundShares();
+
+        //BigDecimal fundShares = assets.stream()
+        //        .filter(asset -> asset.getAssetId()!= null && "FUND_SHARES".equals(asset.getAssetId()))
+        //        .map(Asset::getAmount)
+        //        .filter(Objects::nonNull) // null の金額がある場合の NullPointerException 防止
+        //        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // ★ NAV を計算（10,000 * 総資産 ÷ 口数）
         BigDecimal unitPrice = BigDecimal.ZERO;
@@ -86,7 +89,7 @@ public class FundService {
         fund.setNav(nav);
         fund.setNavDate(navDate);
         fund.setUnitPrice(unitPrice);
-        fund.setFundShares(fundShares);
+        //fund.setFundShares(fundShares);
         fundRepository.save(fund);
 
         return fund;

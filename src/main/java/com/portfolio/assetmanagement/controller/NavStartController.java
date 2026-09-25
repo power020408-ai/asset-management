@@ -33,7 +33,7 @@ public class NavStartController {
         LocalDate navDate = LocalDate.now();
         if (!assetRepository.existsByNavDate(navDate)) {
             redirectAttributes.addFlashAttribute("messageNAV",
-                    "Today's Asset CSV not uploaded");
+                    "Today's Asset CSV not uploaded!");
             return "redirect:/assets/upload";
         }
 

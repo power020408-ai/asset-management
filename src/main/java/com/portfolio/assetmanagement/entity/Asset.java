@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Entity
 @Table(name = "assets")
@@ -24,8 +25,13 @@ public class Asset {
     @Column(name = "nav_date")
     private LocalDate navDate;
 
-    @Column(name = "asset_name")
-    private String name;
+    @ManyToOne(optional = true)
+    @JoinColumn(insertable = false,
+            updatable = false,
+            name = "asset_id",
+            referencedColumnName = "asset_id")
+
+    private AssetMaster assetMaster;
 
     @Column(name = "amount")
     private BigDecimal amount;
@@ -49,10 +55,21 @@ public class Asset {
         this.fund = fund;
     }
 
-    public String getName() {
-        return name;
+    public AssetMaster getAssetMaster() {
+       return assetMaster;
     }
-    public void setName(String name) { this.name = name;}
+
+    public String getAssetType() {
+        return Optional.ofNullable(getAssetMaster())
+                .map(AssetMaster::getAssetType)
+                .orElse("");
+    }
+
+    public String getAssetName() {
+        return Optional.ofNullable(getAssetMaster())
+                .map(AssetMaster::getAssetName)
+                .orElse("");
+    }
 
     public void setNavDate(LocalDate navDate) { this.navDate = navDate;}
 
