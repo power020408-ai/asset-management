@@ -20,7 +20,7 @@
     <tr><th>基準日</th><td th:text="${fund.navDate}"></td></tr>
     <tr><th>基準価格</th><td th:text="${#numbers.formatInteger(fund.unitPrice,1,'COMMA')}"></td></tr>
     <tr><th>NAV</th><td th:text="${#numbers.formatInteger(fund.nav,1,'COMMA')}"></td></tr>
-    <tr><th>口数</th><td th:text="${#numbers.formatInteger(fund.fundShares1,'COMMA')}"></td></tr>
+    <tr><th>口数</th><td th:text="${#numbers.formatInteger(fund.fundShares,1,'COMMA')}"></td></tr>
 
 
 </table>
@@ -31,6 +31,7 @@
         <th>基準日</th>
         <th>基準価格</th>
         <th>NAV</th>
+        <th></th>
     </tr>
 
     <tr th:each="h : ${history.content}">

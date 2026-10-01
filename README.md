@@ -12,10 +12,10 @@ Web API開発で主流となっているSpring Bootの中に Spring Batchとい�
 
 # 2. アーキテクチャ構成<br>
 Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張性の高い設計になっています。<br>
-
-
-<img width="242" height="226" alt="image" src="https://github.com/user-attachments/assets/39dd9751-57e3-48c2-a965-8e06d64f1b6d" />
 <br>
+
+![alt text](./images/アーキテクチャ構成.jpg)
+
 <br>
 
 # 3. 使用技術<br>
@@ -31,7 +31,7 @@ Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張�
 |Others|CSV Import, Composite Key, UUIDv7, Thymeleaf|
 <br>
 
-# 4. エンティティ構造<br>
+# 4. ENTITY構造<br>
 (a) Fund（ファンド）
 - ファンドの基本情報
 - NAV、口数、基準価額の最新を保存
@@ -84,10 +84,16 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 またデータ型 BigDecimal を用いることにより丸め誤差による精度落ちに対応しつつ、端数切捨て・ゼロ判定にも対応
 <br>
 <br>
-# 7. 画面一覧<br>
-<br>
 
-<img width="947" height="126" alt="image" src="https://github.com/user-attachments/assets/34d4ea52-9baa-41d8-8aec-810975d32c5c" />
+# 7. 画面一覧<br>
+
+|画面|パス|メソッド|備考|
+|-------------|---------------------------|---------------------------|---------------------------|
+|ファンド管理 - Upload CSV|/assets/upload|POST|[Upload CSV] ボタンより起動||
+|ファンド管理 - NAV算出開始|/nav/start|POST|[NAV算出開始] ボタンより起動|
+|銘柄マスター管理|/assets/upload|GET|銘柄マスターリストを表示|
+|ファンド開示 - ファンド一覧表|/funds|GET|上記のリンク [ファンドリスト] より展開|
+|ファンド開示 - ファンド詳細|/funds/{Id}|GET|	上記のリンク[詳細] - [開く] より展開|
 
 <br>
 <br>
@@ -122,24 +128,24 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 <br>
 <br>
 
-## <参考>
-<br> 
+# 11. <参考>
+ 
 
 ### 画面 [ ファンド管理 / 銘柄マスター管理 ]
-<br>
-![alt text](ファンド管理_銘柄マスター管理.jpg)
 
 
+銘柄マスターに新規追加されるたび「銘柄マスター管理」の表示件数が増加するため、ページネーションで対応<br/>
+ 
 
-
-
+![alt text](./images/ファンド管理_銘柄マスター管理.jpg)
 
 ### 画面 [ ファンド開示 - ファンド一覧表 ]
 <br>
-<img width="1332" height="442" alt="image" src="https://github.com/user-attachments/assets/a4bbf636-731c-4886-a6f7-b69208534b76" />
 
+![alt text](./images/ファンド開示%20-%20ファンド一覧表.jpg)
 
 
 ### 画面 [ ファンド開示 - ファンド詳細 ]
-履歴が保存されるにつれ「基準価額推移」の表示件数が増えるため、ページネーションで対応<br/>
-<img width="1366" height="720" alt="image" src="https://github.com/user-attachments/assets/5b6e4452-c995-4093-a5b8-e45470b31ff0" />
+履歴が保存されるにたび「基準価額推移」の表示件数が増加するため、ページネーションで対応<br/>
+
+![alt text](./images/ファンド開示%20-%20ファンド詳細.jpg)
