@@ -12,25 +12,80 @@
     <input type="file" name="file" accept=".csv">
     <button type="submit">Upload CSV</button>
 </form>
-<!-- メッセージが存在する場合のみ緑色で表示 -->
-<div th:if="${messageCSV}" th:text="${messageCSV}" style="color: green; font-weight: bold;">
+<!-- 緑色で表示 -->
+<div th:text="${messageCSV}" style="color: green; font-weight: bold;">
     メッセージがここに入ります
 </div>
-
-<br>
 <br>
 
 <form th:action="@{/nav/start}" method="post">
     <button type="submit">NAV算出開始</button>
 </form>
 
-<div th:if="${messageNAV}" th:text="${messageNAV}" style="color: green; font-weight: bold;">
+<div th:text="${messageNAV}" style="color: green; font-weight: bold;">
     メッセージがここに入ります
 </div>
 
 <br>
-<br>
 <a href="/funds">ファンド リスト</a>
+<br>
+<br>
+
+<h1>銘柄マスター管理</h1>
+
+<!-- 1. asset_id 入力欄 ＋ 2. 検索ボタン -->
+<form th:action="@{/assets/upload(searchAssetId=${searchAssetId})}" method="get">
+    <label for="searchAssetId">asset_id：(</label>
+    <input type="text" id="searchAssetId" name="searchAssetId" th:value="${searchAssetId}">
+    <button type="submit">を含む) 検索</button>
+</form>
+
+<!-- 3. 検索結果（asset_type / asset_name は編集可）＋ 4. 更新ボタン -->
+<form th:action="@{/assets/master/update(page=${assetPage?.number}, searchAssetId=${searchAssetId})}"
+      method="post">
+    <table border="1">
+        <thead>
+        <tr class="table-primary">
+            <th class="th-width">asset_id</th>
+            <th class="th-width">asset_type</th>
+            <th class="th-width">asset_name</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody th:if="${assetPage != null}">
+        <tr th:each="item: ${assetPage.content}">
+            <td th:text="${item.assetId}">A001</td>
+            <td><input type="text" name="assetType" th:value="${item.assetType}"></td>
+            <td><input type="text" name="assetName" th:value="${item.assetName}"></td>
+            <td><button type="submit">更新</button></td>
+            <td><input type="hidden" name="assetId" th:value="${item.assetId}"></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+<!-- ナビゲーター -->
+<th:block th:if="${assetPage != null}">
+<div style="margin-top: 8px;">
+    <a th:if="${assetPage.hasPrevious()}"
+       th:href="@{/assets/upload(page=${assetPage.number - 1}, searchAssetId=${searchAssetId})}">← 前へ</a>
+
+    <span th:text="${assetPage.number + 1} + ' / ' + ${assetPage.totalPages}">1 / 3</span>
+
+    <a th:if="${assetPage.hasNext()}"
+       th:href="@{/assets/upload(page=${assetPage.number + 1}, searchAssetId=${searchAssetId})}">次へ →</a>
+
+</div>
+</th:block>
+
+
+<div th:if="${messageRed}" th:text="${messageRed}" style="color: red; font-weight: bold;">
+    メッセージがここに入ります
+</div>
+<div th:if="${messageGreen}" th:text="${messageGreen}" style="color: green; font-weight: bold;">
+    メッセージがここに入ります
+</div>
 
 </body>
 </html>
+

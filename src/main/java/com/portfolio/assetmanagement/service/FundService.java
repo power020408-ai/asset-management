@@ -48,12 +48,6 @@ public class FundService {
 
         BigDecimal fundShares = fund.getFundShares();
 
-        //BigDecimal fundShares = assets.stream()
-        //        .filter(asset -> asset.getAssetId()!= null && "FUND_SHARES".equals(asset.getAssetId()))
-        //        .map(Asset::getAmount)
-        //        .filter(Objects::nonNull) // null の金額がある場合の NullPointerException 防止
-        //        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         // ★ NAV を計算（10,000 * 総資産 ÷ 口数）
         BigDecimal unitPrice = BigDecimal.ZERO;
         if (fundShares.compareTo(BigDecimal.ZERO) != 0) {
@@ -89,7 +83,6 @@ public class FundService {
         fund.setNav(nav);
         fund.setNavDate(navDate);
         fund.setUnitPrice(unitPrice);
-        //fund.setFundShares(fundShares);
         fundRepository.save(fund);
 
         return fund;

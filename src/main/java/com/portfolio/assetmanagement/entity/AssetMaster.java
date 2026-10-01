@@ -21,10 +21,10 @@ public class AssetMaster {
     @Column(name = "asset_type")
     private String assetType;
 
-    public String getAssetID() {return assetId;}
+    public String getAssetId() {return assetId;}
     public String getAssetName() {return assetName;}
     public String getAssetType() {return assetType;}
-    public void setAssetID(String assetId) {
+    public void setAssetId(String assetId) {
         this.assetId = assetId;
         return;
     }

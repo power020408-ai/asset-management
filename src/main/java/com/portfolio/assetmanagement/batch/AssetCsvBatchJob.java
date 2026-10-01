@@ -89,7 +89,6 @@ public class AssetCsvBatchJob {
                           	asset_id = excluded.asset_id,
                         	fund_id = excluded.fund_id,
                         	nav_date = excluded.nav_date,
-                                asset_name = excluded.asset_name,
                         	amount = excluded.amount;
                         """ )
                 .dataSource(dataSource)
@@ -137,6 +136,6 @@ public class AssetCsvBatchJob {
 			.processor(processor)
 			.writer(writer)
 			.build();
-}
+    }
 // end::jobstep[]
 }

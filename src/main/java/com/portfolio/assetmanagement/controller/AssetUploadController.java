@@ -1,5 +1,7 @@
 package com.portfolio.assetmanagement.controller;
 
+import com.portfolio.assetmanagement.entity.AssetMaster;
+import com.portfolio.assetmanagement.repository.AssetMasterRepository;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.JobExecution;
@@ -7,8 +9,13 @@ import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.job.parameters.JobParametersBuilder;
 //import org.springframework.batch.core.launch.JobLauncher; // Depreciated
 import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,11 +46,6 @@ public class AssetUploadController {
         this.jobOperator = jobOperator;
         this.importUserJob = importUserJob;
 
-    }
-
-    @GetMapping("/assets/upload")
-    public String uploadPage() {
-        return "assets-upload";
     }
 
     @PostMapping("/assets/upload")

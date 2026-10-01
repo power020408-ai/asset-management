@@ -36,9 +36,6 @@ public class Fund {
     public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
 
     public BigDecimal getFundShares() { return fundShares; }
-    public String getFundSharesStr() {
-        DecimalFormat df = new DecimalFormat("#,###");
-        return df.format(fundShares); }
     public void setFundShares(BigDecimal fundShares) { this.fundShares = fundShares; }
 
     public BigDecimal getNav() { return nav; }

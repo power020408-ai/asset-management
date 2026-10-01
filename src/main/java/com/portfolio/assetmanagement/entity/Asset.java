@@ -29,7 +29,8 @@ public class Asset {
     @JoinColumn(insertable = false,
             updatable = false,
             name = "asset_id",
-            referencedColumnName = "asset_id")
+            referencedColumnName = "asset_id",
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
 
     private AssetMaster assetMaster;
 

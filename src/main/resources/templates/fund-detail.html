@@ -20,7 +20,8 @@
     <tr><th>基準日</th><td th:text="${fund.navDate}"></td></tr>
     <tr><th>基準価格</th><td th:text="${#numbers.formatInteger(fund.unitPrice,1,'COMMA')}"></td></tr>
     <tr><th>NAV</th><td th:text="${#numbers.formatInteger(fund.nav,1,'COMMA')}"></td></tr>
-    <tr><th>口数</th><td th:text="${fund.getFundSharesStr()}"></td></tr>
+    <tr><th>口数</th><td th:text="${#numbers.formatInteger(fund.fundShares1,'COMMA')}"></td></tr>
+
 
 </table>
 <br>
@@ -32,12 +33,26 @@
         <th>NAV</th>
     </tr>
 
-    <tr th:each="h : ${history}">
+    <tr th:each="h : ${history.content}">
         <td th:text="${h.navDate}"></td>
         <td th:text="${#numbers.formatInteger(h.unitPrice,1,'COMMA')}"></td>
         <td th:text="${#numbers.formatInteger(h.nav,1,'COMMA')}"></td>
+        <td><input type="hidden" name="fundId" th:value="${fund.fundId}"></td>
     </tr>
 </table>
 
+<!-- ナビゲーター -->
+<th:block th:if="${history != null}">
+    <div style="margin-top: 8px;">
+        <a th:if="${history.hasPrevious()}"
+           th:href="@{/funds/{fundId}(fundId=${fund.fundId}, page=${history.number - 1})}">← 前へ</a>
+
+        <span th:text="${history.number + 1} + ' / ' + ${history.totalPages}">1 / 3</span>
+
+        <a th:if="${history.hasNext()}"
+           th:href="@{/funds/{fundId}(fundId=${fund.fundId}, page=${history.number + 1})}">次へ →</a>
+
+    </div>
+</th:block>
 </body>
 </html>
