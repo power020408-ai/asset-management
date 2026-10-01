@@ -43,7 +43,7 @@ public class FundViewController {
         //List<FundNavHistory> history =
         //        historyRepository.findByFundOrderByNavDateDesc(fund);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE,
-                Sort.by(Sort.Direction.ASC, "navDate"));
+                Sort.by(Sort.Direction.DESC, "navDate"));
         Page<FundNavHistory> history = historyRepository.findByFund(fund, pageable); //  .findByFund(fund, pageable);
         model.addAttribute("fund", fund);
         model.addAttribute("history", history);

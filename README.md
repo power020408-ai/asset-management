@@ -31,7 +31,7 @@ Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張�
 |Others|CSV Import, Composite Key, UUIDv7, Thymeleaf|
 <br>
 
-# 4. ENTITY構造<br>
+# 4. Entity構造<br>
 (a) Fund（ファンド）
 - ファンドの基本情報
 - NAV、口数、基準価額の最新を保存
@@ -128,7 +128,7 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 <br>
 <br>
 
-# 11. <参考>
+# 11. 画面イメージ
  
 
 ### 画面 [ ファンド管理 / 銘柄マスター管理 ]
