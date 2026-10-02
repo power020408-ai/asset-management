@@ -28,6 +28,7 @@ Spring Boot の標準的なレイヤー構造を採用し、保守性・拡張�
 |Build|Maven|
 |Language|Java 17|
 |Logging|SLF4J / Logback|
+|Testing|JUnit 5, Mockito|
 |Others|CSV Import, Composite Key, UUIDv7, Thymeleaf|
 <br>
 
@@ -121,7 +122,7 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 <br>
 
 # 10. 今後の拡張予定<br>
-今後、追加したい機能<br>
+今後、追加したい機能です。<br>
 - チャート表示（Chart.js）
 - 資産分類別の投資比率円グラフ表示（Chart.js）
 - JSON形式のデータ開示用 Web APIの追加
@@ -134,8 +135,9 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 ### 画面 [ ファンド管理 / 銘柄マスター管理 ]
 
 
-銘柄マスターに新規追加されるたび「銘柄マスター管理」の表示件数が増加するため、ページネーションで対応<br/>
- 
+銘柄マスターに新規追加されるたび「銘柄マスター管理」の表示件数が増加するため、ページネーションで対応。<br>
+銘柄マスターに存在しない銘柄コードはCSVより自動で追加されますが、資産区分や銘柄名は画面より登録が必要です。<br>
+画面に表示されている銘柄コードに対し、登録・変更を行ったあと [更新] ボタンで一括で処理可能です。<br>
 
 ![alt text](./images/ファンド管理_銘柄マスター管理.jpg)
 
@@ -146,6 +148,33 @@ Spring Batch の Taskletモデルを使用し、JPAにより以下の処理を�
 
 
 ### 画面 [ ファンド開示 - ファンド詳細 ]
-履歴が保存されるにたび「基準価額推移」の表示件数が増加するため、ページネーションで対応<br/>
+履歴が保存されるにたび「基準価額推移」の表示件数が増加するため、ページネーションで対応。<br>
 
 ![alt text](./images/ファンド開示%20-%20ファンド詳細.jpg)
+
+<br>
+
+# 12. 工夫した点・苦労した点
+
+- 金融計算における精度の担保（BigDecimal）
+   基準価額や口数の計算において丸め誤差を出さないよう、安易に double を使わず BigDecimal で統一しました。ゼロ除算のハンドリングや端数処理の指定など、実務を意識した設計を意識しました。
+
+
+- 日中のデータ修正・約定遅延への対応（UPSERT）
+   同じ日・同じ資産でも価格修正等でデータが再送されてくるケースを想定し、複合主キーによる UPSERT 処理をバッチ内に組み込み、データの重複を防ぐ構成にしました。
+
+
+- 画面の使い勝手とページネーション
+   履歴やマスタのデータ増加に対応するため Spring Data の Pageable を導入しました。更新前後のページ間で齟齬が無いよう、リダイレクト時のパラメータ引き継ぎなど画面遷移の使い勝手にも配慮しました。
+
+
+
+
+<br>
+
+
+
+# 13. CI/CD
+
+
+[![Java CI](https://github.com/power020408-ai/asset-management/actions/workflows/test.yml/badge.svg)](https://github.com/power020408-ai/asset-management/actions/workflows/test.yml)
