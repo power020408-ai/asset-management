@@ -95,23 +95,25 @@ class FundServiceTest {
     }
 
     @Test
-    void FUND_SHARESの金額がnullなら口数0とみなし基準価額は0になる() {
+    void FUND_SHARESの口数0なら基準価額は0になる() {
         // Arrange：準備
         Long fundId = 1L;
         LocalDate navDate = LocalDate.of(2025, 1, 31);
 
         Fund fund = mock(Fund.class);
-        Asset fundSharesNull = mock(Asset.class);
+
         FundNavHistory history = mock(FundNavHistory.class);
 
         when(fundRepository.findById(fundId)).thenReturn(Optional.of(fund));
 
         // 口数の資産だが、金額が null
-        when(fundSharesNull.getAssetId()).thenReturn("FUND_SHARES");
-        when(fundSharesNull.getAmount()).thenReturn(null);
+        //when(fundSharesNull.getAssetId()).thenReturn("FUND_SHARES");
+        //when(fundSharesNull.getAmount()).thenReturn(null);
+        when(fund.getFundShares())
+                .thenReturn(new BigDecimal("0"));
 
-        when(assetRepository.findByFundAndNavDate(fund, navDate))
-                .thenReturn(List.of(fundSharesNull));
+        //when(assetRepository.findByFundAndNavDate(fund, navDate))
+        //        .thenReturn(List.of(fundSharesNull));
 
         when(fundNavHistoryRepository.findById(any(FundHistoryId.class)))
                 .thenReturn(Optional.of(history));
