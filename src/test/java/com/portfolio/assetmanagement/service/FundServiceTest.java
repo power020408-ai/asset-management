@@ -28,10 +28,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class FundServiceTest {
 
-    //@Mock
+    @Mock
     private FundRepository fundRepository;
 
-    //@Mock
+    @Mock
     private AssetRepository assetRepository;
 
     @Mock
@@ -56,15 +56,13 @@ class FundServiceTest {
         when(fundRepository.findById(fundId))
                 .thenReturn(Optional.of(fund));
 
+        // ファンドの口数
+        when(fund.getFundShares())
+                .thenReturn(new BigDecimal("80000"));
+
         // 通常の資産
-        when(stock.getAssetId()).thenReturn("STOCK_001");
         when(stock.getAmount())
                 .thenReturn(new BigDecimal("1000000"));
-
-        // ファンドの口数
-        when(fundShares.getAssetId()).thenReturn("FUND_SHARES");
-        when(fundShares.getAmount())
-                .thenReturn(new BigDecimal("80000"));
 
         // AssetRepositoryの設定
         when(assetRepository.findByFundAndNavDate(fund, navDate))
@@ -90,7 +88,6 @@ class FundServiceTest {
         verify(fund).setNav(new BigDecimal("1000000"));
         verify(fund).setNavDate(navDate);
         verify(fund).setUnitPrice(new BigDecimal("125000"));
-        verify(fund).setFundShares(new BigDecimal("80000"));
 
         // 履歴とFundが保存されたか確認
         verify(fundNavHistoryRepository).save(history);

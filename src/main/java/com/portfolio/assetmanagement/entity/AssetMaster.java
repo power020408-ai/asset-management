@@ -1,14 +1,16 @@
 package com.portfolio.assetmanagement.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.util.UUID;
 
 @Entity
 @Table(name = "asset_master")
 public class AssetMaster {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     @Column(columnDefinition = "UUID", updatable = false, nullable = false)
     private UUID id;
 

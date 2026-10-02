@@ -11,9 +11,6 @@
 	<groupId>com.portfolio</groupId>
 	<artifactId>asset-management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
-	<url/>
 	<licenses>
 		<license/>
 	</licenses>
@@ -93,12 +90,10 @@
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
 			<artifactId>spring-batch-core</artifactId>
-			<!--version>6.0.4</version-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
 			<artifactId>spring-batch-infrastructure</artifactId>
-			<!--version>6.0.4</version-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -108,12 +103,10 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>6.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.23.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -129,10 +122,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <version>4.1.0</version>
         </dependency>
-
-
     </dependencies>
 
 	<build>

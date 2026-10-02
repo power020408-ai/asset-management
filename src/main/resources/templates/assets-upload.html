@@ -34,7 +34,8 @@
 <h1>銘柄マスター管理</h1>
 
 <!-- 1. asset_id 入力欄 ＋ 2. 検索ボタン -->
-<form th:action="@{/assets/upload(searchAssetId=${searchAssetId})}" method="get">
+<!--form th:action="@{/assets/upload(searchAssetId=${searchAssetId})}" method="get"-->
+<form th:action="@{/assets/upload}" method="get">
     <label for="searchAssetId">asset_id：(</label>
     <input type="text" id="searchAssetId" name="searchAssetId" th:value="${searchAssetId}">
     <button type="submit">を含む) 検索</button>
@@ -49,6 +50,7 @@
             <th class="th-width">asset_id</th>
             <th class="th-width">asset_type</th>
             <th class="th-width">asset_name</th>
+            <th><button type="submit">更新</button></th>
             <th></th>
         </tr>
         </thead>
@@ -57,7 +59,6 @@
             <td th:text="${item.assetId}">A001</td>
             <td><input type="text" name="assetType" th:value="${item.assetType}"></td>
             <td><input type="text" name="assetName" th:value="${item.assetName}"></td>
-            <td><button type="submit">更新</button></td>
             <td><input type="hidden" name="assetId" th:value="${item.assetId}"></td>
         </tr>
         </tbody>

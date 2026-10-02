@@ -1,22 +1,12 @@
 package com.portfolio.assetmanagement.controller;
 
-import com.portfolio.assetmanagement.entity.AssetMaster;
-import com.portfolio.assetmanagement.repository.AssetMasterRepository;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.JobExecution;
 import org.springframework.batch.core.job.parameters.JobParameters;
 import org.springframework.batch.core.job.parameters.JobParametersBuilder;
-//import org.springframework.batch.core.launch.JobLauncher; // Depreciated
 import org.springframework.batch.core.launch.JobOperator;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,22 +20,17 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 public class AssetUploadController {
-    //private final JobLauncher jobLauncher;
     private final JobOperator jobOperator;
     private final Job importUserJob;
     private static final Logger log =
             LoggerFactory.getLogger(AssetUploadController.class);
 
     public AssetUploadController(
-            //JobLauncher jobLauncher,
             JobOperator jobOperator,
             Job importUserJob
-
             ) {
-        //this.jobLauncher = jobLauncher;
         this.jobOperator = jobOperator;
         this.importUserJob = importUserJob;
-
     }
 
     @PostMapping("/assets/upload")
@@ -68,7 +53,6 @@ public class AssetUploadController {
                             .toJobParameters();
 
                     // 2. ジョブの実行（デフォルトでは同期実行され、終了までここでブロックされます）
-                    //JobExecution jobExecution = jobLauncher.run(importUserJob, params);
                     JobExecution jobExecution = jobOperator.start(importUserJob, params);
 
                     // 3. ジョブの実行結果（BatchStatus）をチェックして画面メッセージを設定

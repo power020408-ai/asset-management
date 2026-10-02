@@ -38,7 +38,7 @@ public class NavScheduler {
 
         } catch (Exception e) {
             // エラー時はログに出力する
-            log.error("NAV Job failed: " + e.getMessage());
+            log.error("NAV Job failed: " + e );
             //e.printStackTrace();
         }
     }
