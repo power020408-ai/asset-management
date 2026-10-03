@@ -34,11 +34,11 @@
 <h1>銘柄マスター管理</h1>
 
 <!-- 1. asset_id 入力欄 ＋ 2. 検索ボタン -->
-<!--form th:action="@{/assets/upload(searchAssetId=${searchAssetId})}" method="get"-->
 <form th:action="@{/assets/upload}" method="get">
-    <label for="searchAssetId">asset_id：(</label>
+    <label for="searchAssetId"> 銘柄コードに</label>
     <input type="text" id="searchAssetId" name="searchAssetId" th:value="${searchAssetId}">
-    <button type="submit">を含む) 検索</button>
+    <span>を含む： </span>
+    <button type="submit">検索</button>
 </form>
 
 <!-- 3. 検索結果（asset_type / asset_name は編集可）＋ 4. 更新ボタン -->
@@ -47,9 +47,9 @@
     <table border="1">
         <thead>
         <tr class="table-primary">
-            <th class="th-width">asset_id</th>
-            <th class="th-width">asset_type</th>
-            <th class="th-width">asset_name</th>
+            <th class="th-width">銘柄コード</th>
+            <th class="th-width">資産分類</th>
+            <th class="th-width">銘柄名</th>
             <th><button type="submit">更新</button></th>
             <th></th>
         </tr>
