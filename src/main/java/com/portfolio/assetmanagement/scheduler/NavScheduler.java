@@ -1,6 +1,5 @@
 package com.portfolio.assetmanagement.scheduler;
 
-import com.portfolio.assetmanagement.service.FundService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.job.Job;

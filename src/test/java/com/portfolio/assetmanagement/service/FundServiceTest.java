@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -107,13 +106,11 @@ class FundServiceTest {
         when(fundRepository.findById(fundId)).thenReturn(Optional.of(fund));
 
         // 口数の資産だが、金額が null
-        //when(fundSharesNull.getAssetId()).thenReturn("FUND_SHARES");
-        //when(fundSharesNull.getAmount()).thenReturn(null);
+
         when(fund.getFundShares())
                 .thenReturn(new BigDecimal("0"));
 
-        //when(assetRepository.findByFundAndNavDate(fund, navDate))
-        //        .thenReturn(List.of(fundSharesNull));
+
 
         when(fundNavHistoryRepository.findById(any(FundHistoryId.class)))
                 .thenReturn(Optional.of(history));

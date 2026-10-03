@@ -7,8 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.time.LocalDate;
-//public interface AssetRepository extends JpaRepository<Asset, Long> {
-//}
+
 
 public interface AssetRepository extends JpaRepository<Asset, AssetId> {
 

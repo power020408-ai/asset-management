@@ -3,7 +3,6 @@ package com.portfolio.assetmanagement.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Entity
