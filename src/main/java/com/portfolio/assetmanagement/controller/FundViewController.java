@@ -32,12 +32,12 @@ public class FundViewController {
     public String fundDetail(@PathVariable Long id,
                              @RequestParam(name = "page", defaultValue = "0") int page,   // ★追加
                              Model model) {
-
+        if (page < 0) {
+            page = 0;
+        }
         Fund fund = fundRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Fund not found: " + id));
 
-        //List<FundNavHistory> history =
-        //        historyRepository.findByFundOrderByNavDateDesc(fund);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE,
                 Sort.by(Sort.Direction.DESC, "navDate"));
         Page<FundNavHistory> history = historyRepository.findByFund(fund, pageable); //  .findByFund(fund, pageable);
