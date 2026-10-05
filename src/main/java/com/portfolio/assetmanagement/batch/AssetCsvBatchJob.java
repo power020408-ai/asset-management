@@ -42,7 +42,7 @@ public class AssetCsvBatchJob {
                 .name("assetItemReader")
                 .resource(new FileSystemResource(filePath)) // FileSystemResource を使用
                 .delimited()
-                .names("fundIdStr", "assetIdStr", "navDateStr", "assetName", "amountStr")
+                .names("fundIdStr", "assetIdStr", "navDateStr", "amountStr")
                 .targetType(AssetCsv.class)
                 .build();
     }
@@ -112,9 +112,9 @@ public class AssetCsvBatchJob {
     // tag::jobstep[]
 
     @Bean
-    public Job importUserJob(JobRepository jobRepository, Step step1,
+    public Job assetCsvJob(JobRepository jobRepository, Step step1,
                              JobCompletionNotificationListener listener) {
-        return new JobBuilder("importUserJob", jobRepository)
+        return new JobBuilder("assetCsvJob", jobRepository)
                 .listener(listener)
                 .start(step1)
                 .build();

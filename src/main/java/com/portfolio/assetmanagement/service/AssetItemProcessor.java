@@ -21,7 +21,6 @@ public class AssetItemProcessor implements ItemProcessor<AssetCsv, AssetTable> {
         final Long fundId = Long.parseLong(asset.fundIdStr());
         final String assetIdStr = asset.assetIdStr();
         final LocalDate navDate = LocalDate.parse(asset.navDateStr(),formatter);
-        final String assetName = asset.assetName();
         final String amountStr = asset.amountStr();
         final BigDecimal amount;
         try {
@@ -30,7 +29,7 @@ public class AssetItemProcessor implements ItemProcessor<AssetCsv, AssetTable> {
             throw new RuntimeException("[amount] format error", e);
         }
 
-        final AssetTable transformedAsset = new AssetTable(fundId, assetIdStr, navDate, assetName, amount);
+        final AssetTable transformedAsset = new AssetTable(fundId, assetIdStr, navDate, amount);
 
         log.info("Converting ({}) into ({})", asset, transformedAsset);
 

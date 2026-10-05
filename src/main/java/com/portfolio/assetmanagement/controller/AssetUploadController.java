@@ -21,16 +21,16 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class AssetUploadController {
     private final JobOperator jobOperator;
-    private final Job importUserJob;
+    private final Job assetCsvJob;
     private static final Logger log =
             LoggerFactory.getLogger(AssetUploadController.class);
 
     public AssetUploadController(
             JobOperator jobOperator,
-            Job importUserJob
+            Job assetCsvJob
             ) {
         this.jobOperator = jobOperator;
-        this.importUserJob = importUserJob;
+        this.assetCsvJob = assetCsvJob;
     }
 
     @PostMapping("/assets/upload")
@@ -53,7 +53,7 @@ public class AssetUploadController {
                             .toJobParameters();
 
                     // 2. ジョブの実行（デフォルトでは同期実行され、終了までここでブロックされます）
-                    JobExecution jobExecution = jobOperator.start(importUserJob, params);
+                    JobExecution jobExecution = jobOperator.start(assetCsvJob, params);
 
                     // 3. ジョブの実行結果（BatchStatus）をチェックして画面メッセージを設定
                     if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
