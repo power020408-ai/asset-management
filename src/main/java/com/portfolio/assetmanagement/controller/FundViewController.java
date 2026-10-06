@@ -41,7 +41,7 @@ public class FundViewController {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE,
                 Sort.by(Sort.Direction.DESC, "navDate"));
         Page<FundNavHistory> history = historyRepository.findByFund(fund, pageable); //  .findByFund(fund, pageable);
-        if (page < 0) page = 0;
+
         // 取得後に、範囲外なら最終ページへ寄せる（任意）
         if (page >= history.getTotalPages() && history.getTotalPages() > 0) {
             page = history.getTotalPages() - 1;

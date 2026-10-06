@@ -5,17 +5,21 @@ import com.portfolio.assetmanagement.repository.AssetMasterRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.ArgumentCaptor;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,7 +28,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 
 @WebMvcTest(AssetMasterController.class)   // 対象を絞ると依存の用意が減る
 class AssetMasterControllerWebTest {
@@ -42,8 +45,19 @@ class AssetMasterControllerWebTest {
 
         mockMvc.perform(get("/assets/upload"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assets-upload"))
-                .andExpect(model().attributeExists("assetPage"));
+                .andExpect(view().name("assets-upload"));
+
+        // ArgumentCaptor - コントローラが「何を」要求したかを捕まえる
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        verify(assetMasterRepository).findAll(captor.capture());
+
+        Pageable requested = captor.getValue();
+        assertEquals(0, requested.getPageNumber());   // 1ページ目
+        assertEquals(3, requested.getPageSize());     // 3件
+
+        Sort.Order order = requested.getSort().getOrderFor("id");
+        assertNotNull(order);                          // id で
+        assertEquals(Sort.Direction.DESC, order.getDirection()); // 降順
     }
 
     @Test
@@ -51,14 +65,18 @@ class AssetMasterControllerWebTest {
         when(assetMasterRepository.findByAssetId("A001"))
                 .thenReturn(Optional.of(new AssetMaster()));
 
-        mockMvc.perform(post("/assets/master/update")
+        MvcResult result = mockMvc.perform(post("/assets/master/update")
                         .param("assetId", "A001")
                         .param("assetType", "株式")
                         .param("assetName", "テスト")
                         .param("page", "1")
                         .param("searchAssetId",""))
-                .andExpect(redirectedUrl("/assets/upload?searchAssetId=&page=1"))
-                .andExpect(flash().attributeExists("messageGreen"));
+                .andExpect(status().is3xxRedirection()) // リダイレクトが発生したか検証
+                .andExpect(flash().attributeExists("messageGreen"))
+                .andReturn();
+
+        String redirectedUrl = result.getResponse().getRedirectedUrl();
+        assertThat(redirectedUrl).contains("page=1");
     }
 
     private static AssetMaster asset(String assetId, String assetName, String assetType) {
@@ -70,14 +88,18 @@ class AssetMasterControllerWebTest {
     }
 
     /** Pageable の offset/size に応じて all をスライスして返す、実物に近いページングのモック。 */
-    private static Page<AssetMaster> slice(List<AssetMaster> all, Pageable pageable) {
+    private static<T> Page<T> slice(List<T> all, Pageable pageable) {
         int from = (int) pageable.getOffset();
         int to = Math.min(from + pageable.getPageSize(), all.size());
-        List<AssetMaster> content = from >= all.size() ? List.of() : all.subList(from, to);
+        List<T> content = from >= all.size() ? List.of() : all.subList(from, to);
         return new PageImpl<>(content, pageable, all.size());
     }
 
     @SuppressWarnings("unchecked")
+    private static Page<AssetMaster> assetPageOf(MvcResult result) {
+        return (Page<AssetMaster>) result.getModelAndView().getModel().get("assetPage");
+    }
+
     @Test
     void 検索なしの場合はid降順で3件ずつページ表示される() throws Exception {
         // Given: A1〜A5, B1 の6件。id はこの順で降順（A1 が最新 = DESC の先頭）
@@ -97,8 +119,7 @@ class AssetMasterControllerWebTest {
                 .andExpect(view().name("assets-upload"))
                 .andReturn();
 
-        Page<AssetMaster> page0 = (Page<AssetMaster>)
-                page0Result.getModelAndView().getModel().get("assetPage");
+        Page<AssetMaster> page0 = assetPageOf(page0Result);
         assertEquals(List.of("A1", "A2", "A3"),
                 page0.getContent().stream().map(AssetMaster::getAssetId).toList());
         Object searchAssetId = page0Result.getModelAndView().getModel().get("searchAssetId");
@@ -108,13 +129,11 @@ class AssetMasterControllerWebTest {
                 perform(get("/assets/upload").param("page", "1"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Page<AssetMaster> page1 = (Page<AssetMaster>)
-                page1Result.getModelAndView().getModel().get("assetPage");
+        Page<AssetMaster> page1 = assetPageOf(page1Result);
         assertEquals(List.of("A4", "A5", "B1"),
                 page1.getContent().stream().map(AssetMaster::getAssetId).toList());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void 検索ありの場合は一致した結果だけASC順でページ表示される() throws Exception {
         // Given: searchAssetId="A" に一致するのは A1〜A5（B1 は対象外）
@@ -132,8 +151,7 @@ class AssetMasterControllerWebTest {
                         .param("searchAssetId", "A").param("page", "0"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Page<AssetMaster> page0 = (Page<AssetMaster>)
-                page0Result.getModelAndView().getModel().get("assetPage");
+        Page<AssetMaster> page0 = assetPageOf(page0Result);
         assertEquals(List.of("A1", "A2", "A3"),
                 page0.getContent().stream().map(AssetMaster::getAssetId).toList());
         assertEquals("A", page0Result.getModelAndView().getModel().get("searchAssetId"));
@@ -142,8 +160,7 @@ class AssetMasterControllerWebTest {
                         .param("searchAssetId", "A").param("page", "1"))
                 .andExpect(status().isOk())
                 .andReturn();
-        Page<AssetMaster> page1 = (Page<AssetMaster>)
-                page1Result.getModelAndView().getModel().get("assetPage");
+        Page<AssetMaster> page1 = page1 = assetPageOf(page1Result);
         assertEquals(List.of("A4", "A5"),
                 page1.getContent().stream().map(AssetMaster::getAssetId).toList());
     }
@@ -156,14 +173,19 @@ class AssetMasterControllerWebTest {
         when(assetMasterRepository.findByAssetId("A4")).thenReturn(Optional.of(a4));
         when(assetMasterRepository.findByAssetId("A5")).thenReturn(Optional.of(a5));
 
-        mockMvc.perform(post("/assets/master/update")
+        MvcResult result = mockMvc.perform(post("/assets/master/update")
                         .param("assetId", "A4", "A5")
-                        .param("assetType", null, "STOCK")
+                        .param("assetType", "", "STOCK")
                         .param("assetName", "A4")
                         .param("searchAssetId", "A")
                         .param("page", "1"))
-                .andExpect(redirectedUrl("/assets/upload?searchAssetId=A&page=1"))
-                .andExpect(flash().attribute("messageGreen", "更新しました"));
+                .andExpect(status().is3xxRedirection()) // リダイレクトが発生したか検証
+                .andExpect(flash().attribute("messageGreen", "更新しました"))
+                .andReturn();
+
+        String redirectedUrl = result.getResponse().getRedirectedUrl();
+        assertThat(redirectedUrl).contains("page=1");
+
 
         assertEquals("A4", a4.getAssetName());
         assertTrue(a4.getAssetType() == null || a4.getAssetType().isBlank());
@@ -172,5 +194,51 @@ class AssetMasterControllerWebTest {
         verify(assetMasterRepository).save(a4);
         verify(assetMasterRepository).save(a5);
     }
+
+    @Test
+    void ページにマイナス1が来ても0ページ目として扱う() throws Exception {
+        when(assetMasterRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(new AssetMaster()),
+                        PageRequest.of(0, 3), 7));   // 全7件
+
+        mockMvc.perform(get("/assets/upload")
+                        .param("page", "-1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assets-upload"))
+                .andExpect(model().attribute("page", 0));   // 画面側にも0が渡る
+
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        verify(assetMasterRepository).findAll(captor.capture());
+        assertEquals(0, captor.getValue().getPageNumber());  // 丸められた
+    }
+
+    @Test
+    void 検索0件ならメッセージを出して一覧を出さない() throws Exception {
+        when(assetMasterRepository.findByAssetIdContainingIgnoreCase(eq("ZZZ"), any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        mockMvc.perform(get("/assets/upload").param("searchAssetId", "ZZZ"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("assetPage", nullValue()))
+                .andExpect(model().attribute("messageRed", "該当する asset_id がありません"))
+                // 「一覧を出さない」を本当に確かめる：name=\"assetType\""は一覧の中にしか無い
+                .andExpect(content().string(not(containsString("name=\"assetType\""))));
+
+    }
+
+    @Test
+    void 存在しない銘柄コードの行は保存しない() throws Exception {
+        when(assetMasterRepository.findByAssetId("XXXX")).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/assets/master/update")
+                        .param("assetId", "XXXX")
+                        .param("assetType", "株式")
+                        .param("assetName", "テスト"))
+                .andExpect(status().is3xxRedirection());
+
+        verify(assetMasterRepository).findByAssetId("XXXX");
+        verify(assetMasterRepository, never()).save(any(AssetMaster.class));
+    }
+
 
 }
