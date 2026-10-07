@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("FundService 単体テスト")
-class FundServiceTestNew {
+class FundServiceTest {
 
     @Mock
     FundRepository fundRepository;

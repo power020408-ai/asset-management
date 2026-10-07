@@ -1,0 +1,1 @@
+ALTER TABLE asset_master ALTER COLUMN id SET DEFAULT uuidv7();
