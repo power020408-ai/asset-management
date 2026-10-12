@@ -4,6 +4,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableBatchProcessing
 public class BatchConfig {
+    // Spring Boot が Batch-JDBC の設定を自動構成するため、
+    // @EnableBatchProcessing は付けない（付けるとDB永続化が無効化される）
 }
